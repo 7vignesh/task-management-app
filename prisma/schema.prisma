@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid()) @unique
+  email String @unique
+  passwordHash String
+  createdAt DateTime
+  updatedAt DateTime
+  @@index([email])
+}
+model Team {
+  id String @id @default(uuid()) @unique
+  name String
+  description String?
+  createdAt DateTime
+  updatedAt DateTime
+  @@index([name])
+}
+model Role {
+  id String @id @default(uuid()) @unique
+  name String @unique
+  description String?
+  createdAt DateTime
+  updatedAt DateTime
+  @@index([name])
+}
+model Task {
+  id String @id @default(uuid()) @unique
+  title String
+  description String?
+  status String
+  assigneeId String? // references User.id
+  teamId String // references Team.id
+  createdAt DateTime
+  updatedAt DateTime
+  @@index([assigneeId])
+  @@index([teamId])
+}
+model Userteam {
+  id String @id @default(uuid()) @unique
+  userId String // references User.id
+  teamId String // references Team.id
+  roleId String // references Role.id
+  joinedAt DateTime
+  @@index([userId])
+  @@index([teamId])
+}
